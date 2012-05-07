@@ -22,7 +22,7 @@
 
 
 from flask import Flask, url_for, render_template, jsonify
-from time import sleep, ctime
+from time import sleep, ctime, time
 from os import uname, getloadavg
 from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
 from pycpuid import brand_string as cpu_brand_name
@@ -34,16 +34,21 @@ app.config.from_envvar('DEV-SERVER_SETTINGS', silent = True)
 app.secret_key = 'bb5d 580;$ 2 b8cfc6a2 …'
 DEBUG = True
 
-def system_uptime():
-	try:
-		f = open( "/proc/uptime" )
-		contents = f.read().split()
-		f.close()
-	except Exception, ex:
-		print "Cannot open uptime file: /proc/uptime", ex
-		return False
+start_time = time()
 
-	total_seconds = float(contents[0])
+def get_uptime(unix_time = None):
+	if not unix_time:
+		try:
+			f = open( "/proc/uptime" )
+			contents = f.read().split()
+			f.close()
+		except Exception, ex:
+			print "Cannot open get_uptime file: /proc/get_uptime", ex
+			return False
+
+		total_seconds = float(contents[0])
+	else:
+		total_seconds = unix_time
 
 	# Helper vars:
 	MINUTE	= 60
@@ -74,10 +79,14 @@ def ajax_stat():
 	stat_phymem_usage = phymem_usage()
 	stat_virtmem_usage = virtmem_usage()
 
+	dev_stats = dict(
+		uptime = get_uptime(time() - start_time)
+	)
+
 	sys_stats = dict(
 		load_avarage	= getloadavg(),
 		date		= ctime(),
-		uptime		= system_uptime(),
+		uptime		= get_uptime(),
 		cpu_percent	= cpu_percent(interval = 0),
 		mem_percent	= stat_phymem_usage.percent,
 		mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
@@ -91,7 +100,7 @@ def ajax_stat():
 		procs_total	= len(get_pid_list())
 	)
 
-	return jsonify(sys_stats = sys_stats)
+	return jsonify(sys_stats = sys_stats, dev_stats = dev_stats)
 
 @app.route("/")
 def page_index():
