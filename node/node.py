@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #
-#  main.py
+#  node.py
 #
 #  Copyright 2012 Delin <delin@eridan.la>
 #
@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 
 
-from flask import Flask, url_for, render_template, jsonify
+from flask import Flask, jsonify
 from time import sleep, ctime, time
 from os import uname, getloadavg
 from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
@@ -30,57 +30,33 @@ from pycpuid import brand_string as cpu_brand_name
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config.from_envvar('DEV-SERVER_SETTINGS', silent = True)
-app.secret_key = 'bb5d 580;$ 2 b8cfc6a2 …'
+app.config.from_envvar('DEV-SERVER-NODE_SETTINGS', silent = True)
+app.secret_key = 'B*%^F56k(OAwcc. 0 ¤'
 DEBUG = True
 
 start_time = time()
 
-def get_uptime(unix_time = None):
-	if not unix_time:
-		try:
-			f = open( "/proc/uptime" )
-			contents = f.read().split()
-			f.close()
-		except Exception, ex:
-			print "Cannot open get_uptime file: /proc/get_uptime", ex
-			return False
 
-		total_seconds = float(contents[0])
-	else:
-		total_seconds = unix_time
+def get_uptime ():
+	""" Function doc """
+	try:
+		f = open( "/proc/uptime" )
+		contents = f.read().split()
+		f.close()
+	except Exception, ex:
+		print "Cannot open get_uptime file: /proc/get_uptime", ex
+		return False
 
-	# Helper vars:
-	MINUTE	= 60
-	HOUR	= MINUTE * 60
-	DAY	= HOUR * 24
+	return int(float(contents[0]))
 
-	# Get the days, hours, etc:
-	days	= int( total_seconds / DAY )
-	hours	= int( ( total_seconds % DAY ) / HOUR )
-	minutes = int( ( total_seconds % HOUR ) / MINUTE )
-	seconds = int( total_seconds % MINUTE )
 
-	# Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
-	string = ""
-	if days > 0:
-		string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
-	if len(string) > 0 or hours > 0:
-		string += (hours < 10 and "0" + str(hours) or str(hours)) + ":"
-	if len(string) > 0 or minutes > 0:
-		string += (minutes < 10 and "0" + str(minutes) or str(minutes)) + ":"
-
-	string += (seconds < 10 and "0" + str(seconds) or str(seconds))
-
-	return string
-
-@app.route('/ajax/sys_stat.json')
-def ajax_stat():
+@app.route('/node_stats')
+def node_stat():
 	stat_phymem_usage = phymem_usage()
 	stat_virtmem_usage = virtmem_usage()
 
 	dev_stats = dict(
-		uptime = get_uptime(time() - start_time)
+		uptime = int(time() - start_time)
 	)
 
 	sys_stats = dict(
@@ -102,20 +78,6 @@ def ajax_stat():
 
 	return jsonify(sys_stats = sys_stats, dev_stats = dev_stats)
 
-@app.route("/")
-def page_index():
-	url_for('static', filename = 'css/*.css')
-	url_for('static', filename = 'img/*.png')
-	url_for('static', filename = 'js/*.js')
-
-	u = uname()
-	sys_stats = dict(
-		hostname = u[1],
-		kernel_name = u[0] + "-" + u[2] + "-" + u[4] +": ",
-		cpu_brand = cpu_brand_name()
-	)
-
-	return render_template('pages/index.html', sys_stats = sys_stats)
 
 if __name__ == "__main__":
-	app.run(host = '0.0.0.0', port = 8081, debug = DEBUG)
+	app.run(host = '0.0.0.0', port = 9900, debug = DEBUG)
