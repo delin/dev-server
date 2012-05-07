@@ -28,11 +28,11 @@ $(document).ready(function() {
 
         $("#sys_stat-cpu_percent").css('width', data.sys_stats.cpu_percent + '%');
         $("#sys_stat-cpu_percent-label").text(data.sys_stats.cpu_percent + '%');
-        $("#sys_stat-mem_usage").text(data.sys_stats.mem_usage + "Mb");
+        $("#sys_stat-mem_usage").text(data.sys_stats.mem_usage + "/" + data.sys_stats.mem_total + "Mb");
         $("#sys_stat-mem_percent").css('width', data.sys_stats.mem_percent + '%');
-        $("#sys_stat-swap_usage").text(data.sys_stats.swap_usage + "Mb");
+        $("#sys_stat-swap_usage").text(data.sys_stats.swap_usage + "/" + data.sys_stats.swap_total + "Mb");
         $("#sys_stat-swap_percent").css('width', data.sys_stats.swap_percent + '%');
-        $("#sys_stat-disk_usage").text(data.sys_stats.disk_usage + "/" + data.sys_stats.disk_total + " Gb");
+        $("#sys_stat-disk_usage").text(data.sys_stats.disk_usage + "/" + data.sys_stats.disk_total + "Gb");
         $("#sys_stat-disk_percent").css('width', data.sys_stats.disk_percent + '%');
         $("#sys_stat-procs_total").text(data.sys_stats.procs_total);
       })

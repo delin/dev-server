@@ -24,7 +24,8 @@
 from flask import Flask, url_for, render_template, jsonify
 from time import sleep, ctime
 from os import uname, getloadavg
-from psutil import phymem_usage, used_phymem, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
+from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
+from pycpuid import brand_string as cpu_brand_name
 
 
 app = Flask(__name__)
@@ -70,15 +71,20 @@ def system_uptime():
 
 @app.route('/ajax/sys_stat.json')
 def ajax_stat():
+	stat_phymem_usage = phymem_usage()
+	stat_virtmem_usage = virtmem_usage()
+
 	sys_stats = dict(
 		load_avarage	= getloadavg(),
 		date		= ctime(),
 		uptime		= system_uptime(),
 		cpu_percent	= cpu_percent(interval = 0),
-		mem_percent	= phymem_usage().percent,
-		mem_usage	= (used_phymem() - cached_phymem()) / 1024 / 1024,
-		swap_percent	= virtmem_usage().percent,
-		swap_usage	= virtmem_usage().used / 1024 / 1024,
+		mem_percent	= stat_phymem_usage.percent,
+		mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
+		mem_total	= stat_phymem_usage.total / 1024 / 1024,
+		swap_percent	= stat_virtmem_usage.percent,
+		swap_usage	= stat_virtmem_usage.used / 1024 / 1024,
+		swap_total	= stat_virtmem_usage.total / 1024 / 1024,
 		disk_percent	= disk_usage('/home').percent,
 		disk_usage	= disk_usage('/home').used / 1024 / 1024 / 1024,
 		disk_total	= disk_usage('/home').total / 1024 / 1024 / 1024,
@@ -95,7 +101,9 @@ def page_index():
 
 	u = uname()
 	sys_stats = dict(
-		host_info = u[1] + ": " + u[0] + "-" + u[2] + "-" + u[4] +": "
+		hostname = u[1],
+		kernel_name = u[0] + "-" + u[2] + "-" + u[4] +": ",
+		cpu_brand = cpu_brand_name()
 	)
 
 	return render_template('pages/index.html', sys_stats = sys_stats)

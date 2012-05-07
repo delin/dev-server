@@ -65,17 +65,17 @@
 					<h3>System:</h3>
 					<span class="span4">
 						<dl class="dl-horizontal">
-							<dt>Host:</dt>
-							<dd>{{ sys_stats.host_info }}</dd>
+							<dt>Hostname:</dt>
+							<dd>{{ sys_stats.hostname }}</dd>
 
-							<dt>Server Date:</dt>
-							<dd><span id="sys_stat-date">load&hellip;</span></dd>
+							<dt>Kernel:</dt>
+							<dd>{{ sys_stats.kernel_name }}</dd>
+
+							<dt>CPU Brand:</dt>
+							<dd>{{ sys_stats.cpu_brand }}</dd>
 
 							<dt>Uptime:</dt>
 							<dd><span id="sys_stat-uptime">load&hellip;</span></dd>
-
-							<dt>Load Avarage:</dt>
-							<dd><span id="sys_stat-load_avarage">load&hellip;</span></dd>
 
 							<dt>Tasks:</dt>
 							<dd><span id="sys_stat-procs_total">load&hellip;</span></dd>
@@ -83,6 +83,12 @@
 					</span>
 					<span class="span4">
 						<dl class="dl-horizontal">
+							<dt>Server Date:</dt>
+							<dd><span id="sys_stat-date">load&hellip;</span></dd>
+
+							<dt>Load Avarage:</dt>
+							<dd><span id="sys_stat-load_avarage">load&hellip;</span></dd>
+
 							<dt>CPU:</dt>
 							<dd>
 								<div id="sys_stat-cpu_percent-div" class="progress progress-striped active">
