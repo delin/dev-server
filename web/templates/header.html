@@ -61,46 +61,49 @@
 					<h3>System:</h3>
 					<span class="span4">
 						<dl class="dl-horizontal">
+							<dt>Host:</dt>
+							<dd>{{ sys_stats.host_info }}</dd>
+
+							<dt>Server Date:</dt>
+							<dd><span id="sys_stat-date">load&hellip;</span></dd>
+
 							<dt>Uptime:</dt>
-							<dd>14 days, 15:10</dd>
+							<dd><span id="sys_stat-uptime">load&hellip;</span></dd>
 
 							<dt>Load Avarage:</dt>
-							<dd>0.81, 1.17, 1.14</dd>
+							<dd><span id="sys_stat-load_avarage">load&hellip;</span></dd>
 
 							<dt>Tasks:</dt>
-							<dd>97</dd>
-
-							<dt>Zombies:</dt>
-							<dd>1</dd>
+							<dd><span id="sys_stat-procs_total">load&hellip;</span></dd>
 						</dl>
 					</span>
 					<span class="span4">
 						<dl class="dl-horizontal">
 							<dt>CPU:</dt>
 							<dd>
-								<div class="progress progress-striped progress-success active">
-									<div class="bar" style="width: 23%;">23%</div>
+								<div id="sys_stat-cpu_percent-div" class="progress progress-striped active">
+									<div id="sys_stat-cpu_percent" class="bar" style="width: 0;"><span id="sys_stat-cpu_percent-label">load&hellip;</span></div>
 								</div>
 							</dd>
 
 							<dt>Mem:</dt>
 							<dd>
-								<div class="progress progress-striped progress-warning active">
-									<div class="bar" style="width: 67%;">67%</div>
+								<div id="sys_stat-mem_percent-div" class="progress progress-striped progress-warning active">
+									<div id="sys_stat-mem_percent" class="bar" style="width: 0;"><span id="sys_stat-mem_usage">load&hellip;</span></div>
 								</div>
 							</dd>
 
 							<dt>Swap:</dt>
 							<dd>
-								<div class="progress progress-striped progress-danger active">
-									<div class="bar" style="width: 7%;">7%</div>
+								<div id="sys_stat-swap_percent-div" class="progress progress-striped progress-danger active">
+									<div id="sys_stat-swap_percent" class="bar" style="width: 0;"><span id="sys_stat-swap_usage">load&hellip;</span></div>
 								</div>
 							</dd>
 
 							<dt>Disk:</dt>
 							<dd>
-								<div class="progress progress-striped progress active">
-									<div class="bar" style="width: 31%;">10/30 Gb</div>
+								<div id="sys_stat-disk_percent-div" class="progress progress-striped progress active">
+									<div id="sys_stat-disk_percent" class="bar" style="width: 0;"><span id="sys_stat-disk_usage">load&hellip;</span></div>
 								</div>
 							</dd>
 						</dl>
