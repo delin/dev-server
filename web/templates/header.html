@@ -1,0 +1,109 @@
+{%- block header -%}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Dev-Server</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Le styles -->
+		<link href="/static/css/bootstrap.css" rel="stylesheet">
+		<style type="text/css">
+			body {
+				padding-top: 60px;
+				padding-bottom: 40px;
+			}
+			.progress {
+				margin-bottom: 5px;
+			}
+		</style>
+		<link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+
+		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<!-- Le fav and touch icons -->
+		<link rel="shortcut icon" href="/static/ico/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
+	</head>
+
+	<body>
+		{% include "menu.html" %}
+		<div class="container">
+			<div class="row">
+				<div class="span4">
+					<h3>Dev-Server:</h3>
+					<dl class="dl-horizontal">
+						<dt>Status:</dt>
+						<dd>Running</dd>
+
+						<dt>Uptime:</dt>
+						<dd>10 days, 22:43</dd>
+
+						<dt>Running Servers:</dt>
+						<dd>17</dd>
+
+						<dt>Stopped Servers:</dt>
+						<dd>2</dd>
+
+						<dt>In Queue:</dt>
+						<dd>0</dd>
+					</dl>
+				</div>
+					<h3>System:</h3>
+					<span class="span4">
+						<dl class="dl-horizontal">
+							<dt>Uptime:</dt>
+							<dd>14 days, 15:10</dd>
+
+							<dt>Load Avarage:</dt>
+							<dd>0.81, 1.17, 1.14</dd>
+
+							<dt>Tasks:</dt>
+							<dd>97</dd>
+
+							<dt>Zombies:</dt>
+							<dd>1</dd>
+						</dl>
+					</span>
+					<span class="span4">
+						<dl class="dl-horizontal">
+							<dt>CPU:</dt>
+							<dd>
+								<div class="progress progress-striped progress-success active">
+									<div class="bar" style="width: 23%;">23%</div>
+								</div>
+							</dd>
+
+							<dt>Mem:</dt>
+							<dd>
+								<div class="progress progress-striped progress-warning active">
+									<div class="bar" style="width: 67%;">67%</div>
+								</div>
+							</dd>
+
+							<dt>Swap:</dt>
+							<dd>
+								<div class="progress progress-striped progress-danger active">
+									<div class="bar" style="width: 7%;">7%</div>
+								</div>
+							</dd>
+
+							<dt>Disk:</dt>
+							<dd>
+								<div class="progress progress-striped progress active">
+									<div class="bar" style="width: 31%;">10/30 Gb</div>
+								</div>
+							</dd>
+						</dl>
+					</span>
+			</div>
+{%- endblock -%}
