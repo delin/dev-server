@@ -48,14 +48,19 @@ class ClientSocket ():
 		self.port = port
 
 		self.sock = socket(AF_INET, SOCK_STREAM)
-		self.connect()
 
 	def connect(self):
-		self.sock.connect((self.host, self.port))
+		try:
+			self.sock.connect((self.host, self.port))
+		except Exception, ex:
+			print ex
+			return False
+
+		return True
 
 	def send(self, msg):
 		sent = self.sock.send(msg)
-		print "-->", msg
+		#~ print "-->", msg
 
 	def recv(self):
 		buf = ''
@@ -69,7 +74,7 @@ class ClientSocket ():
 			else:
 				msg += buf
 
-		print "<--", msg
+		#~ print "<--", msg
 		return msg
 
 	def disconnect(self):
@@ -109,7 +114,11 @@ def get_nodes_status ():
 	nodesl = {}
 	for node in nodes_list:
 		cl = ClientSocket(node['host'], node['port'])
-		nodesl[node['hostname']] = json.loads(cl.recv())
+		if not cl.connect():
+			continue
+
+		r = cl.recv()
+		nodesl[node['hostname']] = json.loads(r)
 
 	qnodes = jsonify(nodesl)
 	nodes_last_update = time()
