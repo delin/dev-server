@@ -83,15 +83,17 @@ $(document).ready(function() {
         for (node in data)
         {
           if (data[node].offline == 1) {
-            $("#node-"+node+"_stat-status").text("Down");
-            $("#node-"+node+"_stat-status").css('color', "#AA1111");
+            $("#node-"+node+"_stat-status").text("Stopped");
+            $("#node-"+node+"_stat-status").removeClass("label-success");
+            $("#node-"+node+"_stat-status").addClass("label-important");
             $("#node-"+node).addClass("muted");
             continue;
           }
 
           $("#node-"+node).removeClass("muted");
-          $("#node-"+node+"_stat-status").text("Up");
-          $("#node-"+node+"_stat-status").css('color', "#11AA11");
+          $("#node-"+node+"_stat-status").text("Started");
+          $("#node-"+node+"_stat-status").addClass("label-success");
+          $("#node-"+node+"_stat-status").removeClass("label-important");
 
           $("#node-"+node+"_stat-load_avarage").text(data[node].load_avarage[0] + ", " + data[node].load_avarage[1] + ", " + data[node].load_avarage[2]);
           $("#node-"+node+"_stat-date").text(data[node].date);
