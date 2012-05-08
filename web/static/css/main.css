@@ -17,8 +17,15 @@ body {
 .table th {
 	color: #BBB;
 }
-caption, h1, h2, h3, h4, h5, h6 {
+h3, h4, h5, h6 {
 	color: #BBB;
+}
+caption, h1, h2, footer {
+	color: black;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);
+	-webkit-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	transition: all .2s linear;
 }
 dt {
 	color: #A7A7A7;
@@ -47,6 +54,12 @@ hr {
 a {
 	color: #8AC;
 }
+footer a {
+	color: #001020;
+}
+footer a:hover {
+	color: #011525;
+}
 .muted {
 	color: #555;
 }
@@ -56,4 +69,26 @@ footer {
 .modal {
 	background-color: #222;
 	background-image:url("/static/img/bg.png");
+}
+.navbar-fixed-top .brand {
+	padding-right: 0;
+	padding-left: 0;
+	margin-left: 20px;
+	float: right;
+	font-weight: bold;
+	color: black;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125);
+	-webkit-transition: all .2s linear;
+	-moz-transition: all .2s linear;
+	transition: all .2s linear;
+}
+.navbar .brand {
+	display: block;
+	float: right;
+	padding: 8px 20px 12px;
+	margin-left: -20px;
+	font-size: 20px;
+	font-weight: 200;
+	line-height: 1;
+	color: #999;
 }
