@@ -21,7 +21,7 @@
 #  MA 02110-1301, USA.
 
 
-from flask import Flask, url_for, render_template, jsonify
+from flask import Flask, url_for, render_template, jsonify, redirect
 from time import sleep, ctime, time
 from os import uname, getloadavg
 from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
@@ -116,10 +116,9 @@ def get_nodes_status ():
 	for node in nodes_list:
 		cl = ClientSocket(node['host'], node['port'])
 		if not cl.connect():
-			continue
-
-		r = cl.recv()
-		nodesl[node['hostname']] = json.loads(r)
+			nodesl[node['hostname']] = {"offline": 1}
+		else:
+			nodesl[node['hostname']] = json.loads(cl.recv())
 
 	qnodes = jsonify(nodesl)
 	nodes_last_update = time()
@@ -225,6 +224,10 @@ def page_index():
 	url_for('static', filename = 'img/*.png')
 	url_for('static', filename = 'js/*.js')
 
+	return redirect(url_for('page_services'))
+
+@app.route("/services")
+def page_services():
 	u = uname()
 	sys_stats = dict(
 		hostname = u[1],
@@ -232,7 +235,7 @@ def page_index():
 		cpu_brand = cpu_brand_name()
 	)
 
-	return render_template('pages/index.html', sys_stats = sys_stats)
+	return render_template('pages/services.html', sys_stats = sys_stats)
 
 if __name__ == "__main__":
 	app.run(host = '0.0.0.0', port = 8081, debug = DEBUG)

@@ -22,6 +22,13 @@ function change_bar_color (obj, percent) {
 };
 
 $(document).ready(function() {
+  if (location.pathname != '/')
+  {
+    $cur_nemu = $('.nav-item').children('a[href="'+location.pathname+'"]');
+    //~ $cur_nemu.find('i').toggleClass('icon-white');
+    $cur_nemu.parent().addClass('active');
+  }
+
   $('#modal-web_off').modal({
     keyboard: false,
     show: false
@@ -75,6 +82,17 @@ $(document).ready(function() {
       function(data) {
         for (node in data)
         {
+          if (data[node].offline == 1) {
+            $("#node-"+node+"_stat-status").text("Down");
+            $("#node-"+node+"_stat-status").css('color', "#AA1111");
+            $("#node-"+node).addClass("muted");
+            continue;
+          }
+
+          $("#node-"+node).removeClass("muted");
+          $("#node-"+node+"_stat-status").text("Up");
+          $("#node-"+node+"_stat-status").css('color', "#11AA11");
+
           $("#node-"+node+"_stat-load_avarage").text(data[node].load_avarage[0] + ", " + data[node].load_avarage[1] + ", " + data[node].load_avarage[2]);
           $("#node-"+node+"_stat-date").text(data[node].date);
           $("#node-"+node+"_stat-uptime").text(data[node].uptime);
