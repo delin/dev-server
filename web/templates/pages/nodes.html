@@ -1,0 +1,105 @@
+{%- include "header.html" -%}
+			<div class="row">
+				<div class="span12">
+					<table class="table table-condensed">
+						<caption><h2>Nodes list</h2></caption>
+						<colgroup>
+							<col style="width: 30px;">
+							<col style="">
+							<col style="">
+							<col style="">
+							<col style="width: 100px;">
+							<col style="width: 100px;">
+							<col style="width: 100px;">
+							<col style="width: 100px;">
+							<col style="">
+							<col style="width: 40px;">
+							<col style="width: 180px;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Hostname</th>
+								<th>Description</th>
+								<th nowrap>Uptime</th>
+								<th>CPU</th>
+								<th>Mem</th>
+								<th>Swap</th>
+								<th>Disk</th>
+								<th>Status</th>
+								<th>Services</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<div id="nodes_list">
+								<tr>
+									<td>0</td>
+									<td>{{ sys_stats.hostname }}</td>
+									<td>This Server</td>
+									<td><span id="node0_stat-uptime">load&hellip;</span></td>
+									<td>
+										<div id="node0_stat-cpu_percent-div" class="progress progress-striped active">
+											<div id="node0_stat-cpu_percent" class="bar" style="width: 0;"><span id="node0_stat-cpu_percent-label">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node0_stat-mem_percent-div" class="progress progress-striped progress-warning active">
+											<div id="node0_stat-mem_percent" class="bar" style="width: 0;"><span id="node0_stat-mem_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node0_stat-swap_percent-div" class="progress progress-striped progress-danger active">
+											<div id="node0_stat-swap_percent" class="bar" style="width: 0;"><span id="node0_stat-swap_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node0_stat-disk_percent-div" class="progress progress-striped progress active">
+											<div id="node0_stat-disk_percent" class="bar" style="width: 0;"><span id="node0_stat-disk_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td style="color: #11AA11">Running</td>
+									<td><span id="node0_stat-services">load&hellip;</span></td>
+									<td>
+										<a class="btn btn-small btn-inverse" href="#"><i class="icon-wrench icon-white"></i> Manage</a>
+										<a class="btn btn-small btn-info" href="#"><i class="icon-eye-open icon-white"></i> Details</a>
+									</td>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>Kiti</td>
+									<td>Asus laptop</td>
+									<td><span id="node1_stat-uptime">load&hellip;</span></td>
+									<td>
+										<div id="node1_stat-cpu_percent-div" class="progress progress-striped active">
+											<div id="node1_stat-cpu_percent" class="bar" style="width: 0;"><span id="node1_stat-cpu_percent-label">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node1_stat-mem_percent-div" class="progress progress-striped progress-warning active">
+											<div id="node1_stat-mem_percent" class="bar" style="width: 0;"><span id="node1_stat-mem_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node1_stat-swap_percent-div" class="progress progress-striped progress-danger active">
+											<div id="node1_stat-swap_percent" class="bar" style="width: 0;"><span id="node1_stat-swap_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td>
+										<div id="node1_stat-disk_percent-div" class="progress progress-striped progress active">
+											<div id="node1_stat-disk_percent" class="bar" style="width: 0;"><span id="node1_stat-disk_usage">load&hellip;</span></div>
+										</div>
+									</td>
+									<td style="color: #11AA11">Running</td>
+									<td><span id="node1_stat-services">load&hellip;</span></td>
+									<td>
+										<a class="btn btn-small btn-inverse" href="#"><i class="icon-wrench icon-white"></i> Manage</a>
+										<a class="btn btn-small btn-info" href="#"><i class="icon-eye-open icon-white"></i> Details</a>
+									</td>
+								</tr>
+							</div>
+						</tbody>
+					</table>
+				</div>
+			</div>
+{%- include "footer.html" -%}

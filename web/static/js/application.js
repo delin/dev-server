@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  //~ var is_create = [];
+
   $('#modal-web_off').modal({
     keyboard: false,
     show: false
@@ -39,6 +41,45 @@ $(document).ready(function() {
     .error(function() {
       $('#modal-web_off').modal('show');
     })
+  }, 2000);
+
+  setInterval(function()
+  {
+    var jqxhr = $.getJSON('/ajax/nodes_stat.json',
+      function(data) {
+        i = 0;
+        for (node in data)
+        {
+          $("#node"+i+"_stat-load_avarage").text(data[node].load_avarage[0] + ", " + data[node].load_avarage[1] + ", " + data[node].load_avarage[2]);
+          $("#node"+i+"_stat-date").text(data[node].date);
+          $("#node"+i+"_stat-uptime").text(data[node].uptime);
+          $("#node"+i+"_stat-services").text(data[node].services);
+
+          red = (Math.round(255 * data[node].cpu_percent / 100)).toString(16);
+          green = (Math.round(255 * (100 - data[node].cpu_percent) / 100)).toString(16);
+          $("#node"+i+"_stat-cpu_percent").css('background-color', "#" + red + green + "00");
+
+          red = (Math.round(255 * data[node].mem_percent / 100)).toString(16);
+          green = (Math.round(255 * (100 - data[node].mem_percent) / 100)).toString(16);
+          $("#node"+i+"_stat-mem_percent").css('background-color', "#" + red + green + "00");
+
+          red = (Math.round(255 * data[node].disk_percent / 100)).toString(16);
+          green = (Math.round(255 * (100 - data[node].disk_percent) / 100)).toString(16);
+          $("#node"+i+"_stat-disk_percent").css('background-color', "#" + red + green + "00");
+
+          $("#node"+i+"_stat-cpu_percent").css('width', data[node].cpu_percent + '%');
+          $("#node"+i+"_stat-cpu_percent-label").text(data[node].cpu_percent + '%');
+          $("#node"+i+"_stat-mem_usage").text(data[node].mem_usage + "/" + data[node].mem_total + "Mb");
+          $("#node"+i+"_stat-mem_percent").css('width', data[node].mem_percent + '%');
+          $("#node"+i+"_stat-swap_usage").text(data[node].swap_usage + "/" + data[node].swap_total + "Mb");
+          $("#node"+i+"_stat-swap_percent").css('width', data[node].swap_percent + '%');
+          $("#node"+i+"_stat-disk_usage").text(data[node].disk_usage + "/" + data[node].disk_total + "Gb");
+          $("#node"+i+"_stat-disk_percent").css('width', data[node].disk_percent + '%');
+          $("#node"+i+"_stat-procs_total").text(data[node].procs_total);
+          i++;
+        }
+      }
+    )
   }, 2000);
 });
 

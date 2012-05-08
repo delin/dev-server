@@ -21,11 +21,12 @@
 #  MA 02110-1301, USA.
 
 
-from flask import Flask, jsonify
+from flask import Flask
 from time import sleep, ctime, time
 from os import uname, getloadavg
 from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
 from pycpuid import brand_string as cpu_brand_name
+import json, threading, socket, select, sys
 
 
 app = Flask(__name__)
@@ -35,31 +36,118 @@ app.secret_key = 'B*%^F56k(OAwcc. 0 ¤'
 DEBUG = True
 
 start_time = time()
+services_run = 0
+
+class server_handler (threading.Thread):
+	def __init__ (self, host = "0.0.0.0", port = 9910):
+		threading.Thread.__init__(self)
+		self.host = host
+		self.port = port
+		self.backlog = 16
+		self.server = None
+
+	def run (self):
+		try:
+			self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			self.server.bind((self.host, self.port))
+			self.server.listen(self.backlog)
+		except socket.error, (value,message):
+			if self.server:
+				self.server.close()
+			print "Could not open socket: " + message
+			return False
+
+		print "Server started."
+
+		while True:
+			self.client, self.address = self.server.accept()
+			if not self.client:
+				break
+
+			self.engine()
+			self.client.close()
+
+		self.shutdown()
+
+	def shutdown (self):
+		self.server.close()
+
+	def msg_send (self, data):
+		if not data:
+			return False
+
+		return self.client.send(json.dumps(data) + '\n')
+
+	def msg_recv (self):
+		buf = ''
+		msg = ''
+
+		while buf != '\n':
+			msg = msg + buf
+			buf = self.client.recv(1)
+			if len(buf) <= 0:
+				return ''
+
+		#~ print "<--", msg
+		return json.loads(msg)
+
+	def engine (self):
+		# Auth
+		self.msg_send(node_stat())
+
+def get_uptime (unix_time = None):
+	if not unix_time:
+		try:
+			f = open( "/proc/uptime" )
+			contents = f.read().split()
+			f.close()
+		except Exception, ex:
+			print "Cannot open get_uptime file: /proc/get_uptime", ex
+			return False
+
+		total_seconds = float(contents[0])
+	else:
+		total_seconds = unix_time
+
+	# Helper vars:
+	MINUTE	= 60
+	HOUR	= MINUTE * 60
+	DAY	= HOUR * 24
+
+	# Get the days, hours, etc:
+	days	= int( total_seconds / DAY )
+	hours	= int( ( total_seconds % DAY ) / HOUR )
+	minutes = int( ( total_seconds % HOUR ) / MINUTE )
+	seconds = int( total_seconds % MINUTE )
+
+	# Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
+	string = ""
+	if days > 0:
+		string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
+	if len(string) > 0 or hours > 0:
+		string += (hours < 10 and "0" + str(hours) or str(hours)) + ":"
+	if len(string) > 0 or minutes > 0:
+		string += (minutes < 10 and "0" + str(minutes) or str(minutes)) + ":"
+
+	string += (seconds < 10 and "0" + str(seconds) or str(seconds))
+
+	return string
 
 
-def get_uptime ():
+@app.route('/')
+def page_index ():
 	""" Function doc """
-	try:
-		f = open( "/proc/uptime" )
-		contents = f.read().split()
-		f.close()
-	except Exception, ex:
-		print "Cannot open get_uptime file: /proc/get_uptime", ex
-		return False
+	return "Helo"
 
-	return int(float(contents[0]))
-
-
-@app.route('/node_stats')
 def node_stat():
 	stat_phymem_usage = phymem_usage()
 	stat_virtmem_usage = virtmem_usage()
 
-	dev_stats = dict(
-		uptime = int(time() - start_time)
-	)
-
 	sys_stats = dict(
+		srv_uptime	= int(time() - start_time),
+		services	= services_run,
+
 		load_avarage	= getloadavg(),
 		date		= ctime(),
 		uptime		= get_uptime(),
@@ -76,8 +164,11 @@ def node_stat():
 		procs_total	= len(get_pid_list())
 	)
 
-	return jsonify(sys_stats = sys_stats, dev_stats = dev_stats)
+	return sys_stats
 
 
 if __name__ == "__main__":
-	app.run(host = '0.0.0.0', port = 9900, debug = DEBUG)
+	srv = server_handler('0.0.0.0', 9910)			# handle the server socket
+	srv.start()
+
+	#~ app.run(host = '0.0.0.0', port = 9900, debug = DEBUG)
