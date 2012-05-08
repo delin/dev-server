@@ -1,6 +1,27 @@
-$(document).ready(function() {
-  //~ var is_create = [];
+function change_bar_color (obj, percent) {
+  if (percent < 10) {
+    $(obj).removeClass("progress-success");
+    $(obj).removeClass("progress-warning");
+    $(obj).removeClass("progress-danger");
+  } else if (percent >= 10 && percent < 40) {
+    $(obj).removeClass("progress-success");
+    $(obj).removeClass("progress-warning");
+    $(obj).removeClass("progress-danger");
+    $(obj).addClass("progress-success");
+  } else if (percent >= 40 && percent < 80) {
+    $(obj).removeClass("progress-success");
+    $(obj).removeClass("progress-warning");
+    $(obj).removeClass("progress-danger");
+    $(obj).addClass("progress-warning");
+  } else {
+    $(obj).removeClass("progress-success");
+    $(obj).removeClass("progress-warning");
+    $(obj).removeClass("progress-danger");
+    $(obj).addClass("progress-danger");
+  }
+};
 
+$(document).ready(function() {
   $('#modal-web_off').modal({
     keyboard: false,
     show: false
@@ -16,17 +37,21 @@ $(document).ready(function() {
         $("#sys_stat-date").text(data.sys_stats.date);
         $("#sys_stat-uptime").text(data.sys_stats.uptime);
 
-        red = (Math.round(255 * data.sys_stats.cpu_percent / 100)).toString(16);
-        green = (Math.round(255 * (100 - data.sys_stats.cpu_percent) / 100)).toString(16);
-        $("#sys_stat-cpu_percent").css('background-color', "#" + red + green + "00");
+        change_bar_color("#sys_stat-cpu_percent-div", data.sys_stats.cpu_percent);
+        change_bar_color("#sys_stat-mem_percent-div", data.sys_stats.mem_percent);
+        change_bar_color("#sys_stat-disk_percent-div", data.sys_stats.disk_percent);
 
-        red = (Math.round(255 * data.sys_stats.mem_percent / 100)).toString(16);
-        green = (Math.round(255 * (100 - data.sys_stats.mem_percent) / 100)).toString(16);
-        $("#sys_stat-mem_percent").css('background-color', "#" + red + green + "00");
-
-        red = (Math.round(255 * data.sys_stats.disk_percent / 100)).toString(16);
-        green = (Math.round(255 * (100 - data.sys_stats.disk_percent) / 100)).toString(16);
-        $("#sys_stat-disk_percent").css('background-color', "#" + red + green + "00");
+        //~ red = (Math.round(255 * data.sys_stats.cpu_percent / 100)).toString(16);
+        //~ green = (Math.round(255 * (100 - data.sys_stats.cpu_percent) / 100)).toString(16);
+        //~ $("#sys_stat-cpu_percent").css('background-image', "#" + red + green + "00");
+//~
+        //~ red = (Math.round(255 * data.sys_stats.mem_percent / 100)).toString(16);
+        //~ green = (Math.round(255 * (100 - data.sys_stats.mem_percent) / 100)).toString(16);
+        //~ $("#sys_stat-mem_percent").css('background-color', "#" + red + green + "00");
+//~
+        //~ red = (Math.round(255 * data.sys_stats.disk_percent / 100)).toString(16);
+        //~ green = (Math.round(255 * (100 - data.sys_stats.disk_percent) / 100)).toString(16);
+        //~ $("#sys_stat-disk_percent").css('background-color', "#" + red + green + "00");
 
         $("#sys_stat-cpu_percent").css('width', data.sys_stats.cpu_percent + '%');
         $("#sys_stat-cpu_percent-label").text(data.sys_stats.cpu_percent + '%');
@@ -41,6 +66,7 @@ $(document).ready(function() {
     .error(function() {
       $('#modal-web_off').modal('show');
     })
+    delete jqxhr;
   }, 2000);
 
   setInterval(function()
@@ -54,18 +80,22 @@ $(document).ready(function() {
           $("#node-"+node+"_stat-uptime").text(data[node].uptime);
           $("#node-"+node+"_stat-services").text(data[node].services);
 
-          red = (Math.round(255 * data[node].cpu_percent / 100)).toString(16);
-          green = (Math.round(255 * (100 - data[node].cpu_percent) / 100)).toString(16);
-          $("#node-"+node+"_stat-cpu_percent").css('background-color', "#" + red + green + "00");
+          change_bar_color("#node-"+node+"_stat-cpu_percent-div", data[node].cpu_percent);
+          change_bar_color("#node-"+node+"_stat-mem_percent-div", data[node].mem_percent);
+          change_bar_color("#node-"+node+"_stat-disk_percent-div", data[node].disk_percent);
 
-          red = (Math.round(255 * data[node].mem_percent / 100)).toString(16);
-          green = (Math.round(255 * (100 - data[node].mem_percent) / 100)).toString(16);
-          $("#node-"+node+"_stat-mem_percent").css('background-color', "#" + red + green + "00");
-
-          red = (Math.round(255 * data[node].disk_percent / 100)).toString(16);
-          green = (Math.round(255 * (100 - data[node].disk_percent) / 100)).toString(16);
-          $("#node-"+node+"_stat-disk_percent").css('background-color', "#" + red + green + "00");
-
+          //~ red = (Math.round(255 * data[node].cpu_percent / 100)).toString(16);
+          //~ green = (Math.round(255 * (100 - data[node].cpu_percent) / 100)).toString(16);
+          //~ $("#node-"+node+"_stat-cpu_percent").css('background-color', "#" + red + green + "00");
+//~
+          //~ red = (Math.round(255 * data[node].mem_percent / 100)).toString(16);
+          //~ green = (Math.round(255 * (100 - data[node].mem_percent) / 100)).toString(16);
+          //~ $("#node-"+node+"_stat-mem_percent").css('background-color', "#" + red + green + "00");
+//~
+          //~ red = (Math.round(255 * data[node].disk_percent / 100)).toString(16);
+          //~ green = (Math.round(255 * (100 - data[node].disk_percent) / 100)).toString(16);
+          //~ $("#node-"+node+"_stat-disk_percent").css('background-color', "#" + red + green + "00");
+//~
           $("#node-"+node+"_stat-cpu_percent").css('width', data[node].cpu_percent + '%');
           $("#node-"+node+"_stat-cpu_percent-label").text(data[node].cpu_percent + '%');
           $("#node-"+node+"_stat-mem_usage").text(data[node].mem_usage + "/" + data[node].mem_total + "Mb");
@@ -78,6 +108,7 @@ $(document).ready(function() {
         }
       }
     )
+    delete jqxhr;
   }, 2000);
 });
 
