@@ -75,6 +75,7 @@ class ClientSocket ():
 				msg += buf
 
 		#~ print "<--", msg
+		self.disconnect()
 		return msg
 
 	def disconnect(self):
