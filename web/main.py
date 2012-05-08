@@ -98,6 +98,13 @@ def get_nodes_status ():
 			port = 9910
 		)
 	)
+	nodes_list.append (
+		dict (
+			hostname = "pyweb",
+			host = "pyweb.dehome",
+			port = 9910
+		)
+	)
 
 	nodesl = {}
 	for node in nodes_list:
