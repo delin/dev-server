@@ -21,26 +21,20 @@
 #  MA 02110-1301, USA.
 
 
-from flask import Flask
 from time import sleep, ctime, time
 from os import uname, getloadavg
-from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
+from psutil import phymem_usage, phymem_buffers, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
 from pycpuid import brand_string as cpu_brand_name
 import json, threading, socket, select, sys
 
 
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.from_envvar('DEV-SERVER-NODE_SETTINGS', silent = True)
-app.secret_key = 'B*%^F56k(OAwcc. 0 ¤'
 DEBUG = True
 
 start_time = time()
 services_run = 0
 
-class server_handler (threading.Thread):
+class server_handler ():
 	def __init__ (self, host = "0.0.0.0", port = 9910):
-		threading.Thread.__init__(self)
 		self.host = host
 		self.port = port
 		self.backlog = 16
@@ -71,6 +65,7 @@ class server_handler (threading.Thread):
 		self.shutdown()
 
 	def shutdown (self):
+		print "Server stopped.."
 		self.server.close()
 
 	def msg_send (self, data):
@@ -134,12 +129,6 @@ def get_uptime (unix_time = None):
 
 	return string
 
-
-@app.route('/')
-def page_index ():
-	""" Function doc """
-	return "Helo"
-
 def node_stat():
 	try:
 		stat_phymem_usage = phymem_usage()
@@ -154,7 +143,7 @@ def node_stat():
 			uptime		= get_uptime(),
 			cpu_percent	= int(cpu_percent(interval = 0)),
 			mem_percent	= int(stat_phymem_usage.percent),
-			mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
+			mem_usage	= (stat_phymem_usage.used - cached_phymem() - phymem_buffers()) / 1024 / 1024,
 			mem_total	= stat_phymem_usage.total / 1024 / 1024,
 			swap_percent	= int(stat_virtmem_usage.percent),
 			swap_usage	= stat_virtmem_usage.used / 1024 / 1024,
@@ -175,6 +164,4 @@ def node_stat():
 
 if __name__ == "__main__":
 	srv = server_handler('0.0.0.0', 9910)			# handle the server socket
-	srv.start()
-
-	#~ app.run(host = '0.0.0.0', port = 9900, debug = DEBUG)
+	srv.run()

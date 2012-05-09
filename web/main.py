@@ -24,10 +24,10 @@
 from flask import Flask, url_for, render_template, jsonify, redirect
 from time import sleep, ctime, time
 from os import uname, getloadavg
-from psutil import phymem_usage, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
+from psutil import phymem_usage, phymem_buffers, cached_phymem, virtmem_usage, cpu_percent, disk_usage, get_pid_list
 from pycpuid import brand_string as cpu_brand_name
 from socket import socket, AF_INET, SOCK_STREAM
-import json
+import threading, json
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -43,15 +43,13 @@ nodes = None
 
 
 class ClientSocket ():
-	def __init__(self, host, port):
-		self.host = host
-		self.port = port
-
+	def __init__(self):
 		self.sock = socket(AF_INET, SOCK_STREAM)
+		self.sock.settimeout(0.3)
 
-	def connect(self):
+	def connect(self, host, port):
 		try:
-			self.sock.connect((self.host, self.port))
+			self.sock.connect((host, port))
 		except Exception, ex:
 			print ex
 			return False
@@ -114,12 +112,14 @@ def get_nodes_status ():
 
 	nodesl = {}
 	for node in nodes_list:
-		cl = ClientSocket(node['host'], node['port'])
-		if not cl.connect():
-			nodesl[node['hostname']] = {"offline": 1}
-		else:
-			ret = json.loads(cl.recv())
-			nodesl[node['hostname']] = ret
+		nodesl[node['hostname']] = {"offline": 1}
+
+		try:
+			cl = ClientSocket()
+			if cl.connect(node['host'], node['port']):
+				nodesl[node['hostname']] = json.loads(cl.recv())
+		except Exception, ex:
+			print ex
 
 	qnodes = jsonify(nodesl)
 	nodes_last_update = time()
@@ -146,7 +146,7 @@ def get_status ():
 		uptime		= get_uptime(),
 		cpu_percent	= int(cpu_percent(interval = 0)),
 		mem_percent	= int(stat_phymem_usage.percent),
-		mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
+		mem_usage	= (stat_phymem_usage.used - cached_phymem() - phymem_buffers()) / 1024 / 1024,
 		mem_total	= stat_phymem_usage.total / 1024 / 1024,
 		swap_percent	= int(stat_virtmem_usage.percent),
 		swap_usage	= stat_virtmem_usage.used / 1024 / 1024,
