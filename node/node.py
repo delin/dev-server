@@ -141,28 +141,34 @@ def page_index ():
 	return "Helo"
 
 def node_stat():
-	stat_phymem_usage = phymem_usage()
-	stat_virtmem_usage = virtmem_usage()
+	try:
+		stat_phymem_usage = phymem_usage()
+		stat_virtmem_usage = virtmem_usage()
 
-	sys_stats = dict(
-		srv_uptime	= int(time() - start_time),
-		services	= services_run,
+		sys_stats = dict(
+			srv_uptime	= int(time() - start_time),
+			services	= services_run,
 
-		load_avarage	= getloadavg(),
-		date		= ctime(),
-		uptime		= get_uptime(),
-		cpu_percent	= int(cpu_percent(interval = 0)),
-		mem_percent	= int(stat_phymem_usage.percent),
-		mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
-		mem_total	= stat_phymem_usage.total / 1024 / 1024,
-		swap_percent	= int(stat_virtmem_usage.percent),
-		swap_usage	= stat_virtmem_usage.used / 1024 / 1024,
-		swap_total	= stat_virtmem_usage.total / 1024 / 1024,
-		disk_percent	= int(disk_usage('/home').percent),
-		disk_usage	= disk_usage('/home').used / 1024 / 1024 / 1024,
-		disk_total	= disk_usage('/home').total / 1024 / 1024 / 1024,
-		procs_total	= len(get_pid_list())
-	)
+			load_avarage	= getloadavg(),
+			date		= ctime(),
+			uptime		= get_uptime(),
+			cpu_percent	= int(cpu_percent(interval = 0)),
+			mem_percent	= int(stat_phymem_usage.percent),
+			mem_usage	= (stat_phymem_usage.used - cached_phymem()) / 1024 / 1024,
+			mem_total	= stat_phymem_usage.total / 1024 / 1024,
+			swap_percent	= int(stat_virtmem_usage.percent),
+			swap_usage	= stat_virtmem_usage.used / 1024 / 1024,
+			swap_total	= stat_virtmem_usage.total / 1024 / 1024,
+			disk_percent	= int(disk_usage('/home').percent),
+			disk_usage	= disk_usage('/home').used / 1024 / 1024 / 1024,
+			disk_total	= disk_usage('/home').total / 1024 / 1024 / 1024,
+			procs_total	= len(get_pid_list())
+		)
+	except Exception, ex:
+		print "Error:", ex
+		sys_stats = dict (
+			error = ex
+		)
 
 	return sys_stats
 

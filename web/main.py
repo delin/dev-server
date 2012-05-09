@@ -118,7 +118,8 @@ def get_nodes_status ():
 		if not cl.connect():
 			nodesl[node['hostname']] = {"offline": 1}
 		else:
-			nodesl[node['hostname']] = json.loads(cl.recv())
+			ret = json.loads(cl.recv())
+			nodesl[node['hostname']] = ret
 
 	qnodes = jsonify(nodesl)
 	nodes_last_update = time()
